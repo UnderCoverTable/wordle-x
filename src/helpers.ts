@@ -1,12 +1,4 @@
-export type Cell = {
-  letter: string;
-  status: string;
-};
-
-export type GameRow = {
-  row: Cell[];
-  entered: boolean;
-};
+import { Cell, GameRow } from "@/constants";
 
 export const initGameStore = (dimension: number): GameRow[] => {
   const cols = dimension;

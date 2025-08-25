@@ -1,18 +1,21 @@
-export default function Card({}) {
+import styles from "@/components/GameBoard/index.module.css";
+
+type CardProps = {
+  letter: string;
+  status: string;
+  rowIndex: number;
+  colIndex: number;
+};
+
+export default function Card({
+  letter,
+  status,
+  rowIndex,
+  colIndex,
+}: CardProps) {
   return (
-    <div
-      style={{
-        width: "65px",
-        height: "65px",
-        border: "2px solid #3a3a3c",
-        borderRadius: "2px",
-        padding: "10px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <h2 style={{ fontSize: "32px", fontWeight: 600 }}>{"H"}</h2>
+    <div className={styles.cardStyle}>
+      <h2 style={{ fontSize: "32px", fontWeight: 600 }}>{letter}</h2>
     </div>
   );
 }

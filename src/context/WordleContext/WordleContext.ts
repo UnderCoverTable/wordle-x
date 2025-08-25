@@ -1,10 +1,12 @@
 'use client'
-import { GameRow } from "@/helpers";
-import { createContext } from "react";
+import { GameRow } from "@/constants";
+import {  } from "@/helpers";
+import { GameAction } from "@/reducers/gameStoreReducer";
+import React, { createContext } from "react";
 
 export const WordleContext = createContext<{
   dimension: number;
   setDimension: (dimension: number) => void;
   gameStore: GameRow[];
-  setGameStore: (store: GameRow[]) => void;
+  dispatch: React.Dispatch<GameAction>;
 } | null>(null);

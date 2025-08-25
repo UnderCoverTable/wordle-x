@@ -1,0 +1,10 @@
+.cardStyle {
+  width: 65px;
+  height: 65px;
+  border: 2px solid #3a3a3c;
+  border-radius: 2px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

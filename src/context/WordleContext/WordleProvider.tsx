@@ -1,21 +1,19 @@
 "use client";
 
 import { WordleContext } from "@/context/WordleContext/WordleContext";
-import { GameRow, initGameStore } from "@/helpers";
-import { ReactNode, useEffect, useState } from "react";
+import { initGameStore } from "@/helpers";
+import { gameReducer } from "@/reducers/gameStoreReducer";
+import { ReactNode, useEffect, useReducer, useState } from "react";
 
 export const WordleProvider = ({ children }: { children: ReactNode }) => {
   const [dimension, setDimension] = useState(5);
-  const [gameStore, setGameStore] = useState<GameRow[]>(() => initGameStore(5));
+  const [gameStore, dispatch] = useReducer(gameReducer, initGameStore(5));
+  const answer = "HELLO";
 
-  useEffect(() => {
-    setGameStore(initGameStore(dimension));
-  }, [dimension]);
-  
+  useEffect(() => {}, [dimension]);
+
   return (
-    <WordleContext.Provider
-      value={{ dimension, setDimension, gameStore, setGameStore }}
-    >
+    <WordleContext.Provider value={{ dimension, setDimension, gameStore, dispatch }}>
       {children}
     </WordleContext.Provider>
   );
