@@ -9,7 +9,7 @@ export default function GameBoard() {
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { gameStore, dispatch } = context;
+  const { gameStore, dispatch, answer } = context;
   console.log("gameStore: ", gameStore);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function GameBoard() {
           break;
 
         default:
-          dispatch({ type: "SET_LETTER", payload: { letter: input } });
+          dispatch({ type: "SET_LETTER", payload: { letter: input, answer } });
           break;
       }
     };

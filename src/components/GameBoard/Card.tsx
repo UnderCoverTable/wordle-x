@@ -15,7 +15,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div className={styles.cardStyle}>
-      <h2 style={{ fontSize: "32px", fontWeight: 600 }}>{letter}</h2>
+      <h2 style={{ fontSize: "32px", fontWeight: 600 }}>{letter.toUpperCase()}</h2>
     </div>
   );
 }

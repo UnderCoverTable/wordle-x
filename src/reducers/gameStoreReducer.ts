@@ -1,12 +1,12 @@
 // reducers/gameReducer.ts
-import { GameRow } from "@/constants";
+import { CARD_STATUSES, GameRow } from "@/constants";
 import { initGameStore } from "@/helpers";
 
 export type GameState = GameRow[];
 
 // actions/gameActions.ts
 export type GameAction =
-  | { type: "SET_LETTER"; payload: { letter: string } }
+  | { type: "SET_LETTER"; payload: { letter: string; answer: string } }
   | { type: "ENTER"; payload: { letter: string } }
   | { type: "BACKSPACE"; payload: { letter: string } };
 
@@ -22,24 +22,34 @@ export const gameReducer = (
       if (rowIndex === -1) return state;
       const colIndex = state[rowIndex].row.findIndex((cell) => !cell.letter);
       if (colIndex === -1) return state;
+      const answer = action.payload.answer;
 
-      return state.map((row, rIdx) =>
-        rIdx === rowIndex
+      return state.map((row, rIdx) => {
+        let letterStatus = "";
+
+        if (answer[colIndex] === letter) {
+          letterStatus = CARD_STATUSES.CORRECT;
+        } else if (answer.includes(letter)) {
+          letterStatus = CARD_STATUSES.MAYBE;
+        } else {
+          letterStatus = CARD_STATUSES.WRONG;
+        }
+
+        return rIdx === rowIndex
           ? {
               ...row,
               row: row.row.map((cell, cIdx) =>
-                cIdx === colIndex ? { ...cell, letter } : cell
+                cIdx === colIndex ? { status: letterStatus, letter } : cell
               ),
             }
-          : row
-      );
+          : row;
+      });
 
     case "ENTER":
       const rowIndexEnter = state.findIndex((row) => !row.entered);
       if (rowIndexEnter === -1) return state;
 
       const isRowFilled = state[rowIndexEnter].row.every((cell) => cell.letter);
-
       if (isRowFilled) {
         return state.map((row, rIdx) =>
           rIdx === rowIndexEnter
@@ -56,7 +66,9 @@ export const gameReducer = (
     case "BACKSPACE":
       const rowIndexBack = state.findIndex((row) => !row.entered);
       if (rowIndexBack === -1) return state;
-      const colIndexBack = state[rowIndexBack].row.findLastIndex((cell) => cell.letter);
+      const colIndexBack = state[rowIndexBack].row.findLastIndex(
+        (cell) => cell.letter
+      );
       if (colIndexBack === -1) return state;
 
       return state.map((row, rIdx) =>
@@ -64,7 +76,7 @@ export const gameReducer = (
           ? {
               ...row,
               row: row.row.map((cell, cIdx) =>
-                cIdx === colIndexBack ? { ...cell, letter: "" } : cell
+                cIdx === colIndexBack ? { status: "", letter: "" } : cell
               ),
             }
           : row

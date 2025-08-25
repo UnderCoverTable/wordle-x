@@ -8,8 +8,14 @@ export type GameRow = {
   entered: boolean;
 };
 
+export const CARD_STATUSES = {
+  CORRECT: "correct",
+  MAYBE: "maybe",
+  WRONG: "wrong",
+};
+
 export const statusColors = {
-  wrong: "#3a3a3c",
-  maybe: "#b59f3b",
-  correct: "#538d4e",
+  [CARD_STATUSES.CORRECT]: "#538d4e",
+  [CARD_STATUSES.MAYBE]: "#b59f3b",
+  [CARD_STATUSES.WRONG]: "#3a3a3c",
 };

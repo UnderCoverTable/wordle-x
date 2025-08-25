@@ -8,12 +8,12 @@ import { ReactNode, useEffect, useReducer, useState } from "react";
 export const WordleProvider = ({ children }: { children: ReactNode }) => {
   const [dimension, setDimension] = useState(5);
   const [gameStore, dispatch] = useReducer(gameReducer, initGameStore(5));
-  const answer = "HELLO";
+  const answer = "hello";
 
   useEffect(() => {}, [dimension]);
 
   return (
-    <WordleContext.Provider value={{ dimension, setDimension, gameStore, dispatch }}>
+    <WordleContext.Provider value={{ dimension, setDimension, gameStore, dispatch, answer }}>
       {children}
     </WordleContext.Provider>
   );
