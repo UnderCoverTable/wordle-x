@@ -1,4 +1,4 @@
-import { Cell, GameRow } from "@/constants";
+import { CARD_STATUSES, Cell, GameRow } from "@/constants";
 
 export const initGameStore = (dimension: number): GameRow[] => {
   const cols = dimension;
@@ -16,4 +16,29 @@ export const initGameStore = (dimension: number): GameRow[] => {
   }
 
   return store;
+};
+
+export const getLetterStatus = (gameStore: GameRow[]) => {
+  const allEnteredRows = gameStore
+    .filter((item) => item.entered)
+    .map((item) => item.row);
+
+  const letterStatus: Record<string, string> = {};
+
+  allEnteredRows.flat().forEach(({ letter, status }) => {
+    if (letterStatus[letter]) {
+      if (letterStatus[letter] === CARD_STATUSES.WRONG) {
+        letterStatus[letter] = status;
+      }
+      if (letterStatus[letter] === CARD_STATUSES.MAYBE) {
+        if (status === CARD_STATUSES.CORRECT) {
+          letterStatus[letter] = status;
+        }
+      }
+    } else {
+      letterStatus[letter] = status;
+    }
+  });
+
+  return letterStatus;
 };

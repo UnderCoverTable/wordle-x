@@ -10,23 +10,26 @@ export default function GameBoard() {
     throw new Error("WordleContext must be used within WordleProvider");
 
   const { gameStore, dispatch, answer } = context;
-  console.log("gameStore: ", gameStore);
 
   useEffect(() => {
     const handleTyping = (e: KeyboardEvent) => {
-      console.log("e.key: ", e.key);
       const input = e.key;
+
+      const isLetter = /^[a-zA-Z]$/.test(input);
+      const isAllowedKey = input === "Enter" || input === "Backspace";
+
+      if (!(isLetter || isAllowedKey)) return;
 
       switch (input) {
         case "Enter":
-          dispatch({ type: "ENTER", payload: { letter: input } });
+          dispatch({ type: "ENTER", payload: { letter: input, answer } });
           break;
         case "Backspace":
           dispatch({ type: "BACKSPACE", payload: { letter: input } });
           break;
 
         default:
-          dispatch({ type: "SET_LETTER", payload: { letter: input, answer } });
+          dispatch({ type: "SET_LETTER", payload: { letter: input } });
           break;
       }
     };

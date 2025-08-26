@@ -6,8 +6,8 @@ export type GameState = GameRow[];
 
 // actions/gameActions.ts
 export type GameAction =
-  | { type: "SET_LETTER"; payload: { letter: string; answer: string } }
-  | { type: "ENTER"; payload: { letter: string } }
+  | { type: "SET_LETTER"; payload: { letter: string } }
+  | { type: "ENTER"; payload: { letter: string; answer: string } }
   | { type: "BACKSPACE"; payload: { letter: string } };
 
 export const gameReducer = (
@@ -22,39 +22,44 @@ export const gameReducer = (
       if (rowIndex === -1) return state;
       const colIndex = state[rowIndex].row.findIndex((cell) => !cell.letter);
       if (colIndex === -1) return state;
-      const answer = action.payload.answer;
 
-      return state.map((row, rIdx) => {
-        let letterStatus = "";
-
-        if (answer[colIndex] === letter) {
-          letterStatus = CARD_STATUSES.CORRECT;
-        } else if (answer.includes(letter)) {
-          letterStatus = CARD_STATUSES.MAYBE;
-        } else {
-          letterStatus = CARD_STATUSES.WRONG;
-        }
-
-        return rIdx === rowIndex
+      return state.map((row, rIdx) =>
+        rIdx === rowIndex
           ? {
               ...row,
               row: row.row.map((cell, cIdx) =>
-                cIdx === colIndex ? { status: letterStatus, letter } : cell
+                cIdx === colIndex ? { ...cell, letter } : cell
               ),
             }
-          : row;
-      });
+          : row
+      );
 
     case "ENTER":
+      const answer = action.payload.answer;
+
       const rowIndexEnter = state.findIndex((row) => !row.entered);
       if (rowIndexEnter === -1) return state;
 
       const isRowFilled = state[rowIndexEnter].row.every((cell) => cell.letter);
+
+      const getStatus = (letter: string, colIndex: number) => {
+        if (answer[colIndex] === letter) {
+          return CARD_STATUSES.CORRECT;
+        } else if (answer.includes(letter)) {
+          return CARD_STATUSES.MAYBE;
+        } else {
+          return CARD_STATUSES.WRONG;
+        }
+      };
+
       if (isRowFilled) {
         return state.map((row, rIdx) =>
           rIdx === rowIndexEnter
             ? {
                 ...row,
+                row: row.row.map((cell, cIdx) => {
+                  return { ...cell, status: getStatus(cell.letter, cIdx) };
+                }),
                 entered: true,
               }
             : row

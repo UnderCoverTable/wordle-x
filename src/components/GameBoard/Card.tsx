@@ -1,4 +1,5 @@
 import styles from "@/components/GameBoard/index.module.css";
+import { statusColors } from "@/constants";
 
 type CardProps = {
   letter: string;
@@ -14,8 +15,18 @@ export default function Card({
   colIndex,
 }: CardProps) {
   return (
-    <div className={styles.cardStyle}>
-      <h2 style={{ fontSize: "32px", fontWeight: 600 }}>{letter.toUpperCase()}</h2>
+    <div
+      className={styles.cardStyle}
+      style={{ backgroundColor: statusColors[status] }}
+    >
+      <h2
+        style={{
+          fontSize: "32px",
+          fontWeight: 600,
+        }}
+      >
+        {letter.toUpperCase()}
+      </h2>
     </div>
   );
 }
