@@ -57,6 +57,7 @@ export default function Key({
         borderRadius: "4px",
         cursor: "pointer",
         backgroundColor: statusColors[status] ?? "#818384",
+        transition: "background-color 0.4s ease",
         height: "55px",
         width: isSpecialKey ? "60px" : "45px",
       }}

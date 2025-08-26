@@ -1,3 +1,4 @@
+"use client";
 import GameBoard from "@/components/GameBoard/GameBoard";
 import Keyboard from "@/components/Keyboard/Keyboard";
 import { WordleProvider } from "@/context/WordleContext/WordleProvider";
