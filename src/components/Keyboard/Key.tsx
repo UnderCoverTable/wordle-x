@@ -15,12 +15,10 @@ export default function Key({
   const context = useContext(WordleContext);
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
-  console.log('letter: ', letter);
 
-  const { gameStore, dispatch, answer } = context;
+  const { dispatch, answer, hasGameEnded } = context;
 
   const isSpecialKey = letter === "Enter" || letter === "Backspace";
-  console.log('status: ', status);
 
   const iconMap = () => {
     switch (letter) {
@@ -34,6 +32,8 @@ export default function Key({
   };
 
   const getOnClick = () => {
+    if (hasGameEnded) return;
+
     switch (letter) {
       case "Enter":
         dispatch({ type: "ENTER", payload: { letter, answer } });

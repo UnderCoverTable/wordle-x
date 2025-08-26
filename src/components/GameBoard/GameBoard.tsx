@@ -9,9 +9,10 @@ export default function GameBoard() {
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { gameStore, dispatch, answer } = context;
+  const { gameStore, dispatch, answer, hasGameEnded } = context;
 
   useEffect(() => {
+    if (hasGameEnded) return;
     const handleTyping = (e: KeyboardEvent) => {
       const input = e.key;
 
@@ -39,7 +40,7 @@ export default function GameBoard() {
     return () => {
       window.removeEventListener("keydown", handleTyping);
     };
-  }, []);
+  }, [hasGameEnded]);
 
   return (
     <div className="flex flex-col gap-2">
