@@ -23,10 +23,10 @@ export default function GameBoard() {
 
       switch (input) {
         case "Enter":
-          dispatch({ type: "ENTER", payload: { letter: input, answer } });
+          dispatch({ type: "ENTER", payload: { answer } });
           break;
         case "Backspace":
-          dispatch({ type: "BACKSPACE", payload: { letter: input } });
+          dispatch({ type: "BACKSPACE" });
           break;
 
         default:
@@ -47,11 +47,7 @@ export default function GameBoard() {
       {gameStore.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-2 justify-center">
           {row.row.map((cell, colIndex) => (
-            <Card
-              key={colIndex}
-              letter={cell.letter}
-              status={cell.status}
-            />
+            <Card key={colIndex} letter={cell.letter} status={cell.status} />
           ))}
         </div>
       ))}

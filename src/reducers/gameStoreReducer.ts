@@ -7,15 +7,14 @@ export type GameState = GameRow[];
 // actions/gameActions.ts
 export type GameAction =
   | { type: "SET_LETTER"; payload: { letter: string } }
-  | { type: "ENTER"; payload: { letter: string; answer: string } }
-  | { type: "BACKSPACE"; payload: { letter: string } };
+  | { type: "ENTER"; payload: { answer: string } }
+  | { type: "BACKSPACE" }
+  | { type: "RESET"; payload: { dimension: number } };
 
 export const gameReducer = (
   state: GameState,
   action: GameAction
 ): GameState => {
-  const letter = action.payload.letter;
-
   switch (action.type) {
     case "SET_LETTER":
       const rowIndex = state.findIndex((row) => !row.entered);
@@ -28,7 +27,9 @@ export const gameReducer = (
           ? {
               ...row,
               row: row.row.map((cell, cIdx) =>
-                cIdx === colIndex ? { ...cell, letter } : cell
+                cIdx === colIndex
+                  ? { ...cell, letter: action.payload.letter }
+                  : cell
               ),
             }
           : row
@@ -86,6 +87,9 @@ export const gameReducer = (
             }
           : row
       );
+
+    case "RESET":
+      return initGameStore(action.payload.dimension);
 
     default:
       return state;

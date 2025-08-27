@@ -23,8 +23,6 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [gameStore.filter((item) => item.entered).length]);
 
-  useEffect(() => {}, [dimension]);
-
   return (
     <WordleContext.Provider
       value={{

@@ -14,11 +14,21 @@ import {
   useColorModeValue,
 } from "@/components/ui/color-mode";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { Select } from "@chakra-ui/select";
+import { DIMENSION_OPTIONS } from "@/helpers";
+import { useContext } from "react";
+import { WordleContext } from "@/context/WordleContext/WordleContext";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("gray.100", "gray.900");
   const textColor = useColorModeValue("black", "white");
+
+  const context = useContext(WordleContext);
+  if (!context)
+    throw new Error("WordleContext must be used within WordleProvider");
+
+  const { setDimension, dispatch } = context;
 
   return (
     <Box bg={bg} px={4} shadow="md">
@@ -38,9 +48,27 @@ export default function Navbar() {
           <Button variant="ghost" color={textColor}>
             About
           </Button>
-          <Button variant="ghost" color={textColor}>
-            Contact
-          </Button>
+
+          <Select
+            placeholder="Select number"
+            size="lg"
+            variant="filled"
+            color="white"
+            bg="blue.500"
+            _hover={{ bg: "blue.600" }}
+            _focus={{ borderColor: "blue.700" }}
+            onChange={(e) => {
+              const num = parseInt(e.target.value, 10);
+              dispatch({ type: "RESET", payload: { dimension: num } });
+              setDimension(num);
+            }}
+          >
+            {DIMENSION_OPTIONS.map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </Select>
 
           {/* Dark/Light Toggle */}
           <ColorModeButton />

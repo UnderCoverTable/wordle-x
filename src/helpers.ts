@@ -36,3 +36,5 @@ export const getLetterStatus = (gameStore: GameRow[]) => {
 export function isValidColorHex(str: string) {
   return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(str);
 }
+
+export const DIMENSION_OPTIONS = Array.from({ length: 6 }, (_, i) => i + 3); // [3, 4, 5, 6, 7, 8]

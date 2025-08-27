@@ -4,6 +4,7 @@ import { Provider } from "@/components/ui/provider";
 
 import "./globals.css";
 import Navbar from "@/components/NavBar/NavBar";
+import { WordleProvider } from "@/context/WordleContext/WordleProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,8 +32,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Provider>
+          <WordleProvider>
             <Navbar />
             {children}
+          </WordleProvider>
         </Provider>
       </body>
     </html>

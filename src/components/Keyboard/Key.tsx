@@ -42,10 +42,10 @@ export default function Key({
 
     switch (letter) {
       case "Enter":
-        dispatch({ type: "ENTER", payload: { letter, answer } });
+        dispatch({ type: "ENTER", payload: { answer } });
         break;
       case "Backspace":
-        dispatch({ type: "BACKSPACE", payload: { letter } });
+        dispatch({ type: "BACKSPACE" });
         break;
 
       default:

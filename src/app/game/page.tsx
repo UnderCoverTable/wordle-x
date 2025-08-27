@@ -5,11 +5,9 @@ import { WordleProvider } from "@/context/WordleContext/WordleProvider";
 
 export default function Game() {
   return (
-    <WordleProvider>
-      <div className="flex flex-col gap-6 items-center justify-center min-h-screen">
-        <GameBoard />
-        <Keyboard />
-      </div>
-    </WordleProvider>
+    <div className="flex flex-col gap-6 items-center justify-center min-h-screen">
+      <GameBoard />
+      <Keyboard />
+    </div>
   );
 }
