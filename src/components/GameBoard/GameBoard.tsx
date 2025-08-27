@@ -1,8 +1,8 @@
 "use client";
-
 import { useContext, useEffect } from "react";
 import Card from "@/components/GameBoard/Card";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
+import { supabaseClient } from "@/utils/supabase/client";
 
 export default function GameBoard() {
   const context = useContext(WordleContext);
