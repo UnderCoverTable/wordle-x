@@ -31,7 +31,7 @@ export default function Navbar() {
         <Spacer />
 
         {/* Links */}
-        <HStack spacing={6}>
+        <HStack gap={6}>
           <Button variant="ghost" color={textColor}>
             Home
           </Button>
