@@ -18,6 +18,7 @@ import { Select } from "@chakra-ui/select";
 import { DIMENSION_OPTIONS } from "@/helpers";
 import { useContext } from "react";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
+import { IoReloadCircleSharp } from "react-icons/io5";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -28,7 +29,7 @@ export default function Navbar() {
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { setDimension, dispatch } = context;
+  const { dimension, setDimension, dispatch } = context;
 
   return (
     <Box bg={bg} px={4} shadow="md">
@@ -49,11 +50,18 @@ export default function Navbar() {
             About
           </Button>
 
+          <Button
+            onClick={() => {
+              dispatch({ type: "RESET", payload: { dimension: dimension } });
+            }}
+          >
+            <IoReloadCircleSharp />
+          </Button>
+
           <Select
             placeholder="Select number"
             size="lg"
             variant="filled"
-            color="white"
             bg="blue.500"
             _hover={{ bg: "blue.600" }}
             _focus={{ borderColor: "blue.700" }}

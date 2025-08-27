@@ -1,5 +1,6 @@
 "use client";
 
+import { supabase } from "@/api/supabaseClient/supabaseClient";
 import { CARD_STATUSES } from "@/constants";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { initGameStore } from "@/helpers";
@@ -11,6 +12,7 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
   const [gameStore, dispatch] = useReducer(gameReducer, initGameStore(5));
   const [hasGameEnded, setHasGameEnded] = useState(false);
   const answer = "hello";
+  const supabaseClient = supabase
 
   useEffect(() => {
     const rowIndex = gameStore.findLastIndex((row) => row.entered);
