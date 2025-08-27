@@ -1,6 +1,8 @@
 "use client";
-import { statusColors } from "@/constants";
+import { useColorMode } from "@/components/ui/color-mode";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
+import { isValidColorHex } from "@/helpers";
+import { useToken } from "@chakra-ui/react";
 import { useContext } from "react";
 import { BsBackspaceReverseFill } from "react-icons/bs";
 import { PiKeyReturnBold } from "react-icons/pi";
@@ -17,6 +19,10 @@ export default function Key({
     throw new Error("WordleContext must be used within WordleProvider");
 
   const { dispatch, answer, hasGameEnded } = context;
+
+  const { colorMode } = useColorMode();
+
+  const [statusColor] = useToken("colors", [`${status}.${colorMode}`]);
 
   const isSpecialKey = letter === "Enter" || letter === "Backspace";
 
@@ -56,7 +62,7 @@ export default function Key({
         alignItems: "center",
         borderRadius: "4px",
         cursor: "pointer",
-        backgroundColor: statusColors[status] ?? "#818384",
+        backgroundColor: isValidColorHex(statusColor) ? statusColor : "#818384",
         transition: "background-color 0.4s ease",
         height: "55px",
         width: isSpecialKey ? "60px" : "45px",

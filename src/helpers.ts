@@ -32,3 +32,7 @@ export const getLetterStatus = (gameStore: GameRow[]) => {
       return map;
     }, {});
 };
+
+export function isValidColorHex(str: string) {
+  return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(str);
+}

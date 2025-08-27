@@ -51,8 +51,6 @@ export default function GameBoard() {
               key={colIndex}
               letter={cell.letter}
               status={cell.status}
-              rowIndex={rowIndex}
-              colIndex={colIndex}
             />
           ))}
         </div>

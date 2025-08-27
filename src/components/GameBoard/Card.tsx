@@ -1,24 +1,19 @@
 import styles from "@/components/GameBoard/index.module.css";
-import { statusColors } from "@/constants";
+import { useColorMode } from "@/components/ui/color-mode";
+import { useToken } from "@chakra-ui/react";
 
 type CardProps = {
   letter: string;
   status: string;
-  rowIndex: number;
-  colIndex: number;
 };
 
-export default function Card({
-  letter,
-  status,
-  rowIndex,
-  colIndex,
-}: CardProps) {
+export default function Card({ letter, status }: CardProps) {
+  const { colorMode } = useColorMode();
+
+  const [statusColor] = useToken("colors", [`${status}.${colorMode}`]);
+
   return (
-    <div
-      className={styles.cardStyle}
-      style={{ backgroundColor: statusColors[status] }}
-    >
+    <div className={styles.cardStyle} style={{ backgroundColor: statusColor }}>
       <h2
         style={{
           fontSize: "32px",

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   Box,
   Flex,
@@ -8,7 +8,12 @@ import {
   Text,
   Spacer,
 } from "@chakra-ui/react";
-import { useColorMode, useColorModeValue } from "@/components/ui/color-mode";
+import {
+  ColorModeButton,
+  useColorMode,
+  useColorModeValue,
+} from "@/components/ui/color-mode";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -38,12 +43,7 @@ export default function Navbar() {
           </Button>
 
           {/* Dark/Light Toggle */}
-          <IconButton
-            size="md"
-            aria-label="Toggle Color Mode"
-            onClick={toggleColorMode}
-            // icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-          />
+          <ColorModeButton />
         </HStack>
       </Flex>
     </Box>
