@@ -9,8 +9,21 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
   const [dimension, setDimension] = useState<number>(5);
   const [gameStore, dispatch] = useReducer(gameReducer, initGameStore(5));
   const [hasGameEnded, setHasGameEnded] = useState<boolean>(false);
+  const [id, setid] = useState(null)
 
   useEffect(() => {
+  fetch("/api/answer")
+    .then((res) => res.json())
+    .then((data) => setid(data.id))
+    .catch((err) => console.error("Error fetching answer:", err));
+}, []);
+
+  useEffect(() => {
+    fetch("/api/validate", {
+      method: "POST",
+      body: JSON.stringify({ id, guess: "hello" }),
+    });
+
     const rowIndex = gameStore.findLastIndex((row) => row.entered);
     const isGuessCorrect = gameStore[rowIndex]?.row.every(
       (item) => item.status === CARD_STATUSES.CORRECT

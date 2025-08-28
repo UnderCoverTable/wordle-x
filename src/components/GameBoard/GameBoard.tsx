@@ -2,8 +2,8 @@
 import { useContext, useEffect, useState } from "react";
 import Card from "@/components/GameBoard/Card";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
-import { isWordValid } from "@/helpers";
 import { motion } from "motion/react";
+import { toaster } from "@/components/ui/toaster";
 
 export default function GameBoard() {
   const context = useContext(WordleContext);
@@ -26,8 +26,15 @@ export default function GameBoard() {
 
       switch (input) {
         case "Enter":
-          dispatch({ type: "ENTER" });
-
+          if (false) {
+            setError(true);
+            toaster.create({
+              description: "Error",
+              type: "info",
+            });
+          } else {
+            dispatch({ type: "ENTER" });
+          }
           break;
 
         case "Backspace":
@@ -55,10 +62,12 @@ export default function GameBoard() {
             <motion.div
               key={rowIndex}
               style={{ display: "flex", flexDirection: "row", gap: 12 }}
-              animate={
-                error && currentRow ? { x: [0, -5, 5, -5, 5, 0] } : { x: 0 }
-              }
               transition={{ duration: 0.25 }}
+              animate={
+                !!(error && rowIndex === currentRow)
+                  ? { x: [0, -5, 5, -5, 5, 0] }
+                  : { x: 0 }
+              }
               onAnimationComplete={() => {
                 setError(false);
               }}

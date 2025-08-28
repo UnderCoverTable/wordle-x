@@ -5,6 +5,7 @@ import { Provider } from "@/components/ui/provider";
 import "./globals.css";
 import Navbar from "@/components/NavBar/NavBar";
 import { WordleProvider } from "@/context/WordleContext/WordleProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <Provider>
           <WordleProvider>
+            <Toaster />
             <Navbar />
             {children}
           </WordleProvider>
