@@ -7,7 +7,7 @@ export type GameState = GameRow[];
 // actions/gameActions.ts
 export type GameAction =
   | { type: "SET_LETTER"; payload: { letter: string } }
-  | { type: "ENTER"; payload: { answer: string } }
+  | { type: "ENTER" }
   | { type: "BACKSPACE" }
   | { type: "RESET"; payload: { dimension: number } };
 
@@ -36,22 +36,10 @@ export const gameReducer = (
       );
 
     case "ENTER":
-      const answer = action.payload.answer;
-
       const rowIndexEnter = state.findIndex((row) => !row.entered);
       if (rowIndexEnter === -1) return state;
 
       const isRowFilled = state[rowIndexEnter].row.every((cell) => cell.letter);
-
-      const getStatus = (letter: string, colIndex: number) => {
-        if (answer[colIndex] === letter) {
-          return CARD_STATUSES.CORRECT;
-        } else if (answer.includes(letter)) {
-          return CARD_STATUSES.MAYBE;
-        } else {
-          return CARD_STATUSES.WRONG;
-        }
-      };
 
       if (isRowFilled) {
         return state.map((row, rIdx) =>
@@ -59,7 +47,7 @@ export const gameReducer = (
             ? {
                 ...row,
                 row: row.row.map((cell, cIdx) => {
-                  return { ...cell, status: getStatus(cell.letter, cIdx) };
+                  return { ...cell };
                 }),
                 entered: true,
               }

@@ -1,5 +1,4 @@
 "use client";
-
 import { CARD_STATUSES } from "@/constants";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { initGameStore } from "@/helpers";
@@ -7,10 +6,9 @@ import { gameReducer } from "@/reducers/gameStoreReducer";
 import { ReactNode, useEffect, useReducer, useState } from "react";
 
 export const WordleProvider = ({ children }: { children: ReactNode }) => {
-  const [dimension, setDimension] = useState(5);
+  const [dimension, setDimension] = useState<number>(5);
   const [gameStore, dispatch] = useReducer(gameReducer, initGameStore(5));
-  const [hasGameEnded, setHasGameEnded] = useState(false);
-  const answer = "hello";
+  const [hasGameEnded, setHasGameEnded] = useState<boolean>(false);
 
   useEffect(() => {
     const rowIndex = gameStore.findLastIndex((row) => row.entered);
@@ -30,7 +28,6 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
         setDimension,
         gameStore,
         dispatch,
-        answer,
         hasGameEnded,
         setHasGameEnded,
       }}

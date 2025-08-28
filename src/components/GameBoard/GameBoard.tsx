@@ -1,15 +1,18 @@
 "use client";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Card from "@/components/GameBoard/Card";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
-import { supabaseClient } from "@/utils/supabase/client";
+import { isWordValid } from "@/helpers";
+import { motion } from "motion/react";
 
 export default function GameBoard() {
   const context = useContext(WordleContext);
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { gameStore, dispatch, answer, hasGameEnded } = context;
+  const { gameStore, dispatch, hasGameEnded } = context;
+  const [error, setError] = useState(false);
+  const currentRow = gameStore.findIndex((item) => !item.entered);
 
   useEffect(() => {
     if (hasGameEnded) return;
@@ -23,8 +26,10 @@ export default function GameBoard() {
 
       switch (input) {
         case "Enter":
-          dispatch({ type: "ENTER", payload: { answer } });
+          dispatch({ type: "ENTER" });
+
           break;
+
         case "Backspace":
           dispatch({ type: "BACKSPACE" });
           break;
@@ -44,13 +49,31 @@ export default function GameBoard() {
 
   return (
     <div className="flex flex-col gap-2">
-      {gameStore.map((row, rowIndex) => (
-        <div key={rowIndex} className="flex gap-2 justify-center">
-          {row.row.map((cell, colIndex) => (
-            <Card key={colIndex} letter={cell.letter} status={cell.status} />
-          ))}
-        </div>
-      ))}
+      {gameStore.map((row, rowIndex) => {
+        return (
+          <div key={rowIndex} className="flex gap-2 justify-center">
+            <motion.div
+              key={rowIndex}
+              style={{ display: "flex", flexDirection: "row", gap: 12 }}
+              animate={
+                error && currentRow ? { x: [0, -5, 5, -5, 5, 0] } : { x: 0 }
+              }
+              transition={{ duration: 0.25 }}
+              onAnimationComplete={() => {
+                setError(false);
+              }}
+            >
+              {row.row.map((cell, colIndex) => (
+                <Card
+                  key={colIndex}
+                  letter={cell.letter}
+                  status={cell.status}
+                />
+              ))}
+            </motion.div>
+          </div>
+        );
+      })}
     </div>
   );
 }

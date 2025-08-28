@@ -18,7 +18,7 @@ export default function Key({
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { dispatch, answer, hasGameEnded } = context;
+  const { dispatch, hasGameEnded } = context;
 
   const { colorMode } = useColorMode();
 
@@ -42,7 +42,7 @@ export default function Key({
 
     switch (letter) {
       case "Enter":
-        dispatch({ type: "ENTER", payload: { answer } });
+        dispatch({ type: "ENTER" });
         break;
       case "Backspace":
         dispatch({ type: "BACKSPACE" });

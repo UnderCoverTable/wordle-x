@@ -9,7 +9,6 @@ export const WordleContext = createContext<{
   setDimension: (dimension: number) => void;
   gameStore: GameRow[];
   dispatch: React.Dispatch<GameAction>;
-  answer: string;
   hasGameEnded: boolean;
   setHasGameEnded: (hasGameEnded: boolean) => void;
 } | null>(null);
