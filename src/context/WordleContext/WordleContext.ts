@@ -16,4 +16,6 @@ export const WordleContext = createContext<{
   setError: (error: boolean) => void;
   flippingRow: number | null;
   setFlippingRow: (flippingRow: number | null) => void;
+  validateionLoading: boolean;
+  setValidateionLoading: (validateionLoading: boolean) => void;
 } | null>(null);

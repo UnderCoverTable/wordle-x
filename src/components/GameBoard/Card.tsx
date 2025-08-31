@@ -30,12 +30,12 @@ export default function Card({
       const flipSequence = async () => {
         await controls.start({
           rotateX: 90,
-          transition: { duration: 0.3, delay, ease: "easeInOut" },
+          transition: { duration: 0.35, delay, ease: "easeInOut" },
         });
         setCurrentColor(statusColor);
         await controls.start({
           rotateX: 0,
-          transition: { duration: 0.3, ease: "easeInOut" },
+          transition: { duration: 0.35, ease: "easeInOut" },
         });
       };
 

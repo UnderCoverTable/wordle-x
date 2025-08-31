@@ -12,6 +12,7 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
   const [id, setid] = useState(0);
   const [error, setError] = useState(false);
   const [flippingRow, setFlippingRow] = useState<number | null>(null);
+  const [validateionLoading, setValidateionLoading] = useState(false);
 
   useEffect(() => {
     fetch(`/api/answer?dimension=${dimension}`)
@@ -46,6 +47,8 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
         setError,
         flippingRow,
         setFlippingRow,
+        validateionLoading,
+        setValidateionLoading,
       }}
     >
       {children}

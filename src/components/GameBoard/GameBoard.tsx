@@ -5,6 +5,7 @@ import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { motion } from "motion/react";
 import { useLetterInput } from "@/hooks/useLetterInput/useLetterInput";
 import { toaster } from "@/components/ui/toaster";
+import { Flex, Spinner, Text } from "@chakra-ui/react";
 
 export default function GameBoard() {
   const context = useContext(WordleContext);
@@ -19,6 +20,7 @@ export default function GameBoard() {
     setError,
     flippingRow,
     dimension,
+    validateionLoading,
   } = context;
   const currentRow = gameStore.findIndex((item) => !item.entered);
 
@@ -42,7 +44,13 @@ export default function GameBoard() {
 
   if (error) {
     toaster.create({
-      title: "Invalid Word",
+      title: (
+        <Flex align="center" justify={"center"}>
+          <Text style={{ fontWeight: 800, fontSize: "16px" }}>
+            Invalid Word
+          </Text>
+        </Flex>
+      ),
     });
   }
   return (
@@ -53,9 +61,10 @@ export default function GameBoard() {
         return (
           <div
             key={rowIndex}
-            className="flex gap-2 justify-center"
-            style={{ perspective: "1000px" }}
+            className="flex justify-center relative"
+            style={{ height: "62px" }} // matches card height
           >
+            {/* Row */}
             <motion.div
               style={{ display: "flex", flexDirection: "row", gap: 12 }}
               transition={{ duration: 0.25 }}
@@ -68,6 +77,7 @@ export default function GameBoard() {
             >
               {row.row.map((cell, colIndex) => (
                 <Card
+                  key={colIndex}
                   letter={cell.letter}
                   status={cell.status}
                   isFlipping={isRowFlipping}
@@ -75,6 +85,13 @@ export default function GameBoard() {
                 />
               ))}
             </motion.div>
+
+            {/* Spinner next to row */}
+            {currentRow === rowIndex && validateionLoading && (
+              <div className="absolute left-full translate-x-4 flex items-center h-full">
+                <Spinner size="sm" animationDuration="0.8s" borderWidth="4px" />
+              </div>
+            )}
           </div>
         );
       })}

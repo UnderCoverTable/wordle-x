@@ -9,11 +9,13 @@ export const useLetterInput = (context: any) => {
     setFlippingRow,
     hasGameEnded,
     dimension,
+    setValidateionLoading,
+    validateionLoading,
   } = context;
   const currentRow = gameStore.findIndex((item: any) => !item.entered);
 
   const handleKey = async (key: string) => {
-    if (hasGameEnded) return;
+    if (hasGameEnded || validateionLoading) return;
 
     switch (key) {
       case "Enter":
@@ -27,18 +29,26 @@ export const useLetterInput = (context: any) => {
           break;
         }
 
-        const response = await validateAnswerApi({ guess, id });
-        const validatedAnswer = await response?.json();
+        try {
+          setValidateionLoading(true);
 
-        if (validatedAnswer?.valid) {
-          dispatch({
-            type: "ENTER",
-            payload: { status: validatedAnswer.status },
-          });
-          setFlippingRow(currentRow);
-        } else {
-          setError(true);
+          const response = await validateAnswerApi({ guess, id });
+          const validatedAnswer = await response?.json();
+
+          if (validatedAnswer?.valid) {
+            dispatch({
+              type: "ENTER",
+              payload: { status: validatedAnswer.status },
+            });
+            setFlippingRow(currentRow);
+          } else {
+            setError(true);
+          }
+        } catch (error) {
+        } finally {
+          setValidateionLoading(false);
         }
+
         break;
 
       case "Backspace":
