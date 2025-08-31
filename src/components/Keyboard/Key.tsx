@@ -1,7 +1,7 @@
 "use client";
 import { useColorMode } from "@/components/ui/color-mode";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
-import { isValidColorHex } from "@/helpers";
+import { isValidColorHex, validateAnswerApi } from "@/helpers";
 import { useToken } from "@chakra-ui/react";
 import { useContext } from "react";
 import { BsBackspaceReverseFill } from "react-icons/bs";
@@ -18,13 +18,22 @@ export default function Key({
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { dispatch, hasGameEnded } = context;
+  const {
+    dispatch,
+    hasGameEnded,
+    gameStore,
+    id,
+    setError,
+    flippingRow,
+    setFlippingRow,
+  } = context;
 
   const { colorMode } = useColorMode();
 
   const [statusColor] = useToken("colors", [`${status}.${colorMode}`]);
 
   const isSpecialKey = letter === "Enter" || letter === "Backspace";
+  const currentRow = gameStore.findIndex((item) => !item.entered);
 
   const iconMap = () => {
     switch (letter) {
@@ -37,19 +46,36 @@ export default function Key({
     }
   };
 
-  const getOnClick = () => {
+  const getOnClick = async () => {
     if (hasGameEnded) return;
 
     switch (letter) {
       case "Enter":
-        dispatch({ type: "ENTER" });
+        const rowToFlip = currentRow;
+
+        const response = await validateAnswerApi({ gameStore, id });
+        const validatedAnswer = await response?.json();
+
+        if (validatedAnswer?.valid) {
+          dispatch({
+            type: "ENTER",
+            payload: { status: validatedAnswer.status },
+          });
+          setFlippingRow(rowToFlip);
+        } else {
+          setError(true);
+        }
         break;
+
       case "Backspace":
         dispatch({ type: "BACKSPACE" });
         break;
 
       default:
-        dispatch({ type: "SET_LETTER", payload: { letter } });
+        dispatch({
+          type: "SET_LETTER",
+          payload: { letter: letter?.toLowerCase() },
+        });
         break;
     }
   };

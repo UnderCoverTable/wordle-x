@@ -1,17 +1,17 @@
-import { supabaseClient } from "@/utils/supabase/client";
 import { NextResponse } from "next/server";
+import AnswerService from "@/app/api/answer/service";
 
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const dimension = searchParams.get("dimension");
+
   try {
-    const { data, error } = await supabaseClient.rpc("get_random_word_id");
-
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      return NextResponse.json({ error: "No word found" }, { status: 404 });
+    const answer = await AnswerService.getAnswer(Number(dimension));
+    if (answer.id) {
+      return NextResponse.json({ id: answer.id }, { status: 200 });
     }
-
-    return NextResponse.json({ id: data[0].id });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ message: answer.message }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

@@ -11,4 +11,9 @@ export const WordleContext = createContext<{
   dispatch: React.Dispatch<GameAction>;
   hasGameEnded: boolean;
   setHasGameEnded: (hasGameEnded: boolean) => void;
+  id: number;
+  error: boolean;
+  setError: (error: boolean) => void;
+  flippingRow: number | null;
+  setFlippingRow: (flippingRow: number | null) => void;
 } | null>(null);

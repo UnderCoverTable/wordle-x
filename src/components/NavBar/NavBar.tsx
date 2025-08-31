@@ -29,7 +29,8 @@ export default function Navbar() {
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { dimension, setDimension, dispatch } = context;
+  const { dimension, setDimension, dispatch, setHasGameEnded, setFlippingRow } =
+    context;
 
   return (
     <Box bg={bg} px={4} shadow="md">
@@ -53,6 +54,8 @@ export default function Navbar() {
           <Button
             onClick={() => {
               dispatch({ type: "RESET", payload: { dimension: dimension } });
+              setHasGameEnded(false);
+              setFlippingRow(null);
             }}
           >
             <IoReloadCircleSharp />
@@ -66,9 +69,11 @@ export default function Navbar() {
             _hover={{ bg: "blue.600" }}
             _focus={{ borderColor: "blue.700" }}
             onChange={(e) => {
-              const num = parseInt(e.target.value, 10);
-              dispatch({ type: "RESET", payload: { dimension: num } });
+              const num = parseInt(e.target.value);
               setDimension(num);
+              setHasGameEnded(false);
+              setFlippingRow(null);
+              dispatch({ type: "RESET", payload: { dimension: num } });
             }}
           >
             {DIMENSION_OPTIONS.map((num) => (

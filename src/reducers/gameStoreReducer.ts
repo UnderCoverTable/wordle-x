@@ -7,7 +7,7 @@ export type GameState = GameRow[];
 // actions/gameActions.ts
 export type GameAction =
   | { type: "SET_LETTER"; payload: { letter: string } }
-  | { type: "ENTER" }
+  | { type: "ENTER"; payload: { status: Array<string> } }
   | { type: "BACKSPACE" }
   | { type: "RESET"; payload: { dimension: number } };
 
@@ -47,7 +47,7 @@ export const gameReducer = (
             ? {
                 ...row,
                 row: row.row.map((cell, cIdx) => {
-                  return { ...cell };
+                  return { ...cell, status: action.payload.status[cIdx] };
                 }),
                 entered: true,
               }
@@ -70,7 +70,7 @@ export const gameReducer = (
           ? {
               ...row,
               row: row.row.map((cell, cIdx) =>
-                cIdx === colIndexBack ? { status: "", letter: "" } : cell
+                cIdx === colIndexBack ? { ...cell, letter: "" } : cell
               ),
             }
           : row
