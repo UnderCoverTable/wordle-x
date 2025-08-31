@@ -10,15 +10,15 @@ export const system = createSystem(defaultConfig, {
       colors: {
         correct: {
           light: { value: "#538d4e" },
-          dark: { value: "#85bb65" },
+          dark: { value: "#538d4e" },
         },
         maybe: {
           light: { value: "#b59f3b" },
-          dark: { value: "#d4c86e" },
+          dark: { value: "#b59f3b" },
         },
         wrong: {
           light: { value: "#3a3a3c" },
-          dark: { value: "#6a6a6c" },
+          dark: { value: "#3a3a3c" },
         },
       },
     },

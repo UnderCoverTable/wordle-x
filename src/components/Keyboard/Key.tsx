@@ -2,10 +2,12 @@
 import { useColorMode } from "@/components/ui/color-mode";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { isValidColorHex, validateAnswerApi } from "@/helpers";
+import { useLetterInput } from "@/hooks/useLetterInput/useLetterInput";
 import { useToken } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { BsBackspaceReverseFill } from "react-icons/bs";
 import { PiKeyReturnBold } from "react-icons/pi";
+import { motion, useAnimation } from "framer-motion";
 
 export default function Key({
   letter = "",
@@ -18,22 +20,13 @@ export default function Key({
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const {
-    dispatch,
-    hasGameEnded,
-    gameStore,
-    id,
-    setError,
-    flippingRow,
-    setFlippingRow,
-  } = context;
+  const { hasGameEnded } = context;
 
   const { colorMode } = useColorMode();
-
   const [statusColor] = useToken("colors", [`${status}.${colorMode}`]);
+  const [clicked, setClicked] = useState("");
 
   const isSpecialKey = letter === "Enter" || letter === "Backspace";
-  const currentRow = gameStore.findIndex((item) => !item.entered);
 
   const iconMap = () => {
     switch (letter) {
@@ -48,40 +41,23 @@ export default function Key({
 
   const getOnClick = async () => {
     if (hasGameEnded) return;
+    setClicked(letter);
 
-    switch (letter) {
-      case "Enter":
-        const rowToFlip = currentRow;
-
-        const response = await validateAnswerApi({ gameStore, id });
-        const validatedAnswer = await response?.json();
-
-        if (validatedAnswer?.valid) {
-          dispatch({
-            type: "ENTER",
-            payload: { status: validatedAnswer.status },
-          });
-          setFlippingRow(rowToFlip);
-        } else {
-          setError(true);
-        }
-        break;
-
-      case "Backspace":
-        dispatch({ type: "BACKSPACE" });
-        break;
-
-      default:
-        dispatch({
-          type: "SET_LETTER",
-          payload: { letter: letter?.toLowerCase() },
-        });
-        break;
-    }
+    const handleKey = useLetterInput(context);
+    await handleKey(letter);
   };
 
   return (
-    <div
+    <motion.div
+      animate={
+        letter === clicked
+          ? {
+              scale: [1, 1.1, 1],
+              transition: { duration: 0.1, ease: "easeInOut" },
+            }
+          : {}
+      }
+      onAnimationComplete={() => setClicked("")}
       style={{
         display: "flex",
         justifyContent: "center",
@@ -89,13 +65,13 @@ export default function Key({
         borderRadius: "4px",
         cursor: "pointer",
         backgroundColor: isValidColorHex(statusColor) ? statusColor : "#818384",
-        transition: "background-color 0.4s ease",
+        transition: "background-color 0.7s ease",
         height: "55px",
         width: isSpecialKey ? "60px" : "45px",
       }}
       onClick={getOnClick}
     >
       <h2 style={{ fontSize: "20px", fontWeight: 800 }}>{iconMap()}</h2>
-    </div>
+    </motion.div>
   );
 }

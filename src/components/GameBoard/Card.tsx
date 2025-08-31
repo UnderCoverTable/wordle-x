@@ -3,6 +3,7 @@ import { motion, useAnimation } from "framer-motion";
 import { useColorMode } from "@/components/ui/color-mode";
 import { useToken } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { isValidColorHex } from "@/helpers";
 
 type CardProps = {
   letter: string;
@@ -21,38 +22,35 @@ export default function Card({
   const controls = useAnimation();
 
   const [statusColor] = useToken("colors", [`${status}.${colorMode}`]);
-
   const [currentColor, setCurrentColor] = useState("");
 
+  // Flip animation
   useEffect(() => {
     if (isFlipping && statusColor) {
       const flipSequence = async () => {
-        // First half of flip (0 to 90 degrees)
         await controls.start({
           rotateX: 90,
-          transition: {
-            duration: 0.3,
-            delay: delay,
-            ease: "easeInOut",
-          },
+          transition: { duration: 0.3, delay, ease: "easeInOut" },
         });
-
-        // Change color and show backface at the midpoint
         setCurrentColor(statusColor);
-
-        // Second half of flip (90 to 0 degrees)
         await controls.start({
           rotateX: 0,
-          transition: {
-            duration: 0.3,
-            ease: "easeInOut",
-          },
+          transition: { duration: 0.3, ease: "easeInOut" },
         });
       };
 
       flipSequence();
     }
   }, [isFlipping, statusColor, status]);
+
+  useEffect(() => {
+    if (letter) {
+      controls.start({
+        scale: [1, 1.1, 1],
+        transition: { duration: 0.1, ease: "easeInOut" },
+      });
+    }
+  }, [letter]);
 
   return (
     <motion.div
@@ -64,7 +62,13 @@ export default function Card({
         alignItems: "center",
         justifyContent: "center",
         transformStyle: "preserve-3d",
-        border: "2px solid #878a8c",
+        border: "2px solid",
+        borderColor:
+          currentColor && isValidColorHex(statusColor)
+            ? "transparent"
+            : letter
+            ? "#515253"
+            : "#333335",
         backgroundColor: isFlipping ? currentColor : statusColor,
       }}
     >

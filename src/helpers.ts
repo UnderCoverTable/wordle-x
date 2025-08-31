@@ -1,5 +1,11 @@
 import { CARD_STATUSES, Cell, GameRow, STATUS_PRIORITY } from "@/constants";
 
+export function isValidColorHex(str: string) {
+  return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(str);
+}
+
+export const DIMENSION_OPTIONS = Array.from({ length: 6 }, (_, i) => i + 3);
+
 export const initGameStore = (dimension: number): GameRow[] => {
   const cols = dimension;
   const rows = dimension + 1;
@@ -52,21 +58,13 @@ export const getGuessStatus = ({
   return status;
 };
 
-export function isValidColorHex(str: string) {
-  return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(str);
-}
-
-export const DIMENSION_OPTIONS = Array.from({ length: 6 }, (_, i) => i + 3);
-
 export const validateAnswerApi = async ({
-  gameStore,
+  guess,
   id,
 }: {
-  gameStore: GameRow[];
+  guess: string;
   id: number;
 }) => {
-  const rowIndex = gameStore.findIndex((row) => !row.entered);
-  const guess = gameStore[rowIndex]?.row?.map((item) => item.letter).join("");
 
   try {
     const response = await fetch("/api/validate", {

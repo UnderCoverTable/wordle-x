@@ -3,7 +3,8 @@ import { useContext, useEffect, useState } from "react";
 import Card from "@/components/GameBoard/Card";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { motion } from "motion/react";
-import { validateAnswerApi } from "@/helpers";
+import { useLetterInput } from "@/hooks/useLetterInput/useLetterInput";
+import { toaster } from "@/components/ui/toaster";
 
 export default function GameBoard() {
   const context = useContext(WordleContext);
@@ -12,13 +13,11 @@ export default function GameBoard() {
 
   const {
     gameStore,
-    dispatch,
     hasGameEnded,
     id,
     error,
     setError,
     flippingRow,
-    setFlippingRow,
     dimension,
   } = context;
   const currentRow = gameStore.findIndex((item) => !item.entered);
@@ -26,44 +25,26 @@ export default function GameBoard() {
   useEffect(() => {
     if (hasGameEnded) return;
 
+    const handleKey = useLetterInput(context);
+
     const handleTyping = async (e: KeyboardEvent) => {
       const input = e.key;
       const isLetter = /^[a-zA-Z]$/.test(input);
       const isAllowedKey = input === "Enter" || input === "Backspace";
       if (!(isLetter || isAllowedKey)) return;
 
-      switch (input) {
-        case "Enter":
-          const rowToFlip = currentRow;
-
-          const response = await validateAnswerApi({ gameStore, id });
-          const validatedAnswer = await response?.json();
-
-          if (validatedAnswer?.valid) {
-            dispatch({
-              type: "ENTER",
-              payload: { status: validatedAnswer.status },
-            });
-            setFlippingRow(rowToFlip);
-          } else {
-            setError(true);
-          }
-          break;
-
-        case "Backspace":
-          dispatch({ type: "BACKSPACE" });
-          break;
-
-        default:
-          dispatch({ type: "SET_LETTER", payload: { letter: input } });
-          break;
-      }
+      await handleKey(input);
     };
 
     window.addEventListener("keydown", handleTyping);
     return () => window.removeEventListener("keydown", handleTyping);
-  }, [hasGameEnded, id, gameStore, currentRow, dispatch, setError, dimension]);
+  }, [hasGameEnded, id, gameStore, dimension]);
 
+  if (error) {
+    toaster.create({
+      title: "Invalid Word",
+    });
+  }
   return (
     <div className="flex flex-col gap-2" key={dimension}>
       {gameStore.map((row, rowIndex) => {

@@ -7,6 +7,8 @@ import {
   Button,
   Text,
   Spacer,
+  Menu,
+  Portal,
 } from "@chakra-ui/react";
 import {
   ColorModeButton,
@@ -16,9 +18,11 @@ import {
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Select } from "@chakra-ui/select";
 import { DIMENSION_OPTIONS } from "@/helpers";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { IoReloadCircleSharp } from "react-icons/io5";
+import { motion, useAnimation } from "framer-motion";
+import { HiViewGridAdd } from "react-icons/hi";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -28,6 +32,7 @@ export default function Navbar() {
   const context = useContext(WordleContext);
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
+  const [open, setOpen] = useState(false);
 
   const { dimension, setDimension, dispatch, setHasGameEnded, setFlippingRow } =
     context;
@@ -36,52 +41,65 @@ export default function Navbar() {
     <Box bg={bg} px={4} shadow="md">
       <Flex h={16} alignItems="center">
         {/* Logo / Brand */}
-        <Text fontSize="xl" fontWeight="bold" color={textColor}>
-          MyApp
-        </Text>
-
+        <Flex align={"center"} gap={2}>
+          <HiViewGridAdd size={22} />
+          <Text fontSize="xl" fontWeight="bold" color={textColor}>
+            Wordle  X
+          </Text>
+        </Flex>
         <Spacer />
 
         {/* Links */}
         <HStack gap={6}>
-          <Button variant="ghost" color={textColor}>
-            Home
-          </Button>
-          <Button variant="ghost" color={textColor}>
-            About
-          </Button>
-
-          <Button
-            onClick={() => {
-              dispatch({ type: "RESET", payload: { dimension: dimension } });
-              setHasGameEnded(false);
-              setFlippingRow(null);
-            }}
-          >
-            <IoReloadCircleSharp />
-          </Button>
-
-          <Select
-            placeholder="Select number"
-            size="lg"
-            variant="filled"
-            bg="blue.500"
-            _hover={{ bg: "blue.600" }}
-            _focus={{ borderColor: "blue.700" }}
-            onChange={(e) => {
-              const num = parseInt(e.target.value);
-              setDimension(num);
-              setHasGameEnded(false);
-              setFlippingRow(null);
-              dispatch({ type: "RESET", payload: { dimension: num } });
-            }}
-          >
-            {DIMENSION_OPTIONS.map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </Select>
+          <Menu.Root onOpenChange={(details) => setOpen(details.open)}>
+            <Menu.Trigger asChild>
+              <Button variant="outline">
+                <motion.div
+                  animate={{ rotate: open ? 180 : 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  <IoReloadCircleSharp />
+                </motion.div>{" "}
+                {dimension}
+              </Button>
+            </Menu.Trigger>
+            <Portal>
+              <Menu.Positioner>
+                <Menu.Content
+                  style={{
+                    minWidth: "70px",
+                  }}
+                >
+                  {DIMENSION_OPTIONS.map((num) => (
+                    <Menu.Item
+                      key={num}
+                      value={num.toString()}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor:
+                          dimension === num ? "#3182CE" : "transparent",
+                        color: dimension === num ? "white" : "inherit",
+                        borderRadius: "4px",
+                      }}
+                      onSelect={() => {
+                        setDimension(num);
+                        setHasGameEnded(false);
+                        setFlippingRow(null);
+                        dispatch({
+                          type: "RESET",
+                          payload: { dimension: num },
+                        });
+                      }}
+                    >
+                      {num}
+                    </Menu.Item>
+                  ))}
+                </Menu.Content>
+              </Menu.Positioner>
+            </Portal>
+          </Menu.Root>
 
           {/* Dark/Light Toggle */}
           <ColorModeButton />

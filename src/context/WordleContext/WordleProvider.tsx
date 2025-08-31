@@ -8,7 +8,6 @@ import { ReactNode, useEffect, useReducer, useState } from "react";
 export const WordleProvider = ({ children }: { children: ReactNode }) => {
   const [dimension, setDimension] = useState<number>(5);
   const [gameStore, dispatch] = useReducer(gameReducer, initGameStore(5));
-  console.log('gameStore: ', gameStore);
   const [hasGameEnded, setHasGameEnded] = useState<boolean>(false);
   const [id, setid] = useState(0);
   const [error, setError] = useState(false);
