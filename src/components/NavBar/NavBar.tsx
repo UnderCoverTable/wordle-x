@@ -38,7 +38,7 @@ export default function Navbar() {
     context;
 
   return (
-    <Box bg={bg} px={4} shadow="md">
+    <Box bg={bg} px={4} shadow="md" className="h-16 flex-shrink-0" >
       <Flex h={16} alignItems="center">
         {/* Logo / Brand */}
         <Flex align={"center"} gap={2}>
