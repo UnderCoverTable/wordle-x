@@ -6,6 +6,7 @@ import "./globals.css";
 import Navbar from "@/components/NavBar/NavBar";
 import { WordleProvider } from "@/context/WordleContext/WordleProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from "@/context/AuthContext/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,15 +34,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-screen overflow-hidden`}
       >
         <Provider>
-          <WordleProvider>
-            <Toaster />
-
-            <Navbar />
-
-            <main className="flex-1 overflow-y-auto">
-              {children}
-            </main>
-          </WordleProvider>
+          <AuthProvider>
+            <WordleProvider>
+              <Toaster />
+              <Navbar />
+              <main className="flex-1 overflow-y-auto">{children}</main>
+            </WordleProvider>
+          </AuthProvider>
         </Provider>
       </body>
     </html>

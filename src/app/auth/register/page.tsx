@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Box,
   Button,
@@ -20,6 +19,18 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
+  const handleSubmit = async () => {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
+    });
+    console.log("response: ", response);
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen">
       <Card.Root className="w-100">
@@ -31,18 +42,36 @@ export default function Login() {
           <Stack gap="4" w="full">
             <Field.Root>
               <Field.Label>Username</Field.Label>
-              <Input placeholder="Enter username"/>
+              <Input
+                placeholder="Enter username"
+                value={username}
+                onChange={(event) => {
+                  setUsername(event.target.value);
+                }}
+              />
             </Field.Root>
-              <Field.Root>
+            <Field.Root>
               <Field.Label>Email</Field.Label>
-              <Input placeholder="Enter email"/>
+              <Input
+                placeholder="Enter email"
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
+              />
             </Field.Root>
             <Field.Root>
               <Field.Label>Password</Field.Label>
-              <Input placeholder="Enter password"/>
+              <Input
+                placeholder="Enter password"
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                }}
+              />
             </Field.Root>
 
-            <Button variant="solid">Register</Button>
+            <Button variant="solid" onClick={handleSubmit}>Register</Button>
 
             <Box position="relative" w="full" my="6">
               <Separator className="w-[45%]" />

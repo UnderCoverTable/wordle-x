@@ -5,8 +5,12 @@ import {
   Button,
   Card,
   Center,
+  CloseButton,
+  Dialog,
   Field,
+  Flex,
   Input,
+  Portal,
   Separator,
   Stack,
   Text,
@@ -18,6 +22,17 @@ import { FcGoogle } from "react-icons/fc";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [openResetPassowrd, setOpenResetPassowrd] = useState(false);
+
+  const handleSubmit = async () => {
+    const response = await fetch("/api/signIn", {
+      method: "POST",
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -30,15 +45,34 @@ export default function Login() {
           <Stack gap="4" w="full">
             <Field.Root>
               <Field.Label>Email</Field.Label>
-              <Input placeholder="Enter email"/>
+              <Input
+                placeholder="Enter email"
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
+              />
             </Field.Root>
             <Field.Root>
               <Field.Label>Password</Field.Label>
-              <Input placeholder="Enter password"/>
+              <Input
+                placeholder="Enter password"
+                value={password}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                }}
+              />
             </Field.Root>
 
-            <Button variant="solid">Sign in</Button>
-            <Text className="flex items-center justify-center text-sm">
+            <Button variant="solid" onClick={handleSubmit}>
+              Sign in
+            </Button>
+            <Text
+              className="flex items-center justify-center text-sm cursor-pointer"
+              onClick={() => {
+                setOpenResetPassowrd(true);
+              }}
+            >
               Forgot your password?
             </Text>
 
@@ -72,6 +106,37 @@ export default function Login() {
           <Link href="/auth/register">Dont have an account? Sign up</Link>
         </Card.Footer>
       </Card.Root>
+
+      <Dialog.Root
+        lazyMount
+        open={openResetPassowrd}
+        onOpenChange={(e) => setOpenResetPassowrd(e.open)}
+        placement={"center"}
+      >
+        <Dialog.Trigger asChild></Dialog.Trigger>
+        <Portal>
+          <Dialog.Backdrop />
+          <Dialog.Positioner>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Reset Password</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Body>
+                <Field.Root>
+                  <Flex direction="row" gap={6} className="w-full items-center">
+                    <Input placeholder="Enter email" size="lg" />
+                    <Button size="sm">Send</Button>
+                  </Flex>
+                </Field.Root>
+              </Dialog.Body>
+
+              <Dialog.CloseTrigger asChild>
+                <CloseButton size="sm" />
+              </Dialog.CloseTrigger>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Portal>
+      </Dialog.Root>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 import { CARD_STATUSES } from "@/constants";
+import { useAuth } from "@/context/AuthContext/AuthProvider";
 import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { initGameStore } from "@/helpers";
 import { gameReducer } from "@/reducers/gameStoreReducer";
