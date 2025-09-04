@@ -19,3 +19,16 @@ export const STATUS_PRIORITY = {
   [CARD_STATUSES.MAYBE]: 1,
   [CARD_STATUSES.CORRECT]: 2,
 };
+
+export const GAME_STATUS = {
+  IN_PROGRESS: "in-progress",
+  WON: "won",
+  LOST: "lost",
+};
+
+type GameStatusType = (typeof GAME_STATUS)[keyof typeof GAME_STATUS];
+
+export type GameState = {
+  status: GameStatusType | "";
+  answerID: number | null;
+};

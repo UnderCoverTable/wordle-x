@@ -23,6 +23,8 @@ import { WordleContext } from "@/context/WordleContext/WordleContext";
 import { IoReloadCircleSharp } from "react-icons/io5";
 import { motion, useAnimation } from "framer-motion";
 import { HiViewGridAdd } from "react-icons/hi";
+import UserInfo from "@/components/NavBar/UserInfo/UserInfo";
+import { GAME_STATUS, GameState } from "@/constants";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -34,17 +36,17 @@ export default function Navbar() {
     throw new Error("WordleContext must be used within WordleProvider");
   const [open, setOpen] = useState(false);
 
-  const { dimension, setDimension, dispatch, setHasGameEnded, setFlippingRow } =
+  const { dimension, setDimension, dispatch, setGameStatus, setFlippingRow } =
     context;
 
   return (
-    <Box bg={bg} px={4} shadow="md" className="h-16 flex-shrink-0" >
+    <Box bg={bg} px={4} shadow="md" className="h-16 flex-shrink-0">
       <Flex h={16} alignItems="center">
         {/* Logo / Brand */}
         <Flex align={"center"} gap={2}>
           <HiViewGridAdd size={22} />
           <Text fontSize="xl" fontWeight="bold" color={textColor}>
-            Wordle  X
+            Wordle X
           </Text>
         </Flex>
         <Spacer />
@@ -85,7 +87,12 @@ export default function Navbar() {
                       }}
                       onSelect={() => {
                         setDimension(num);
-                        setHasGameEnded(false);
+                        setGameStatus((prev) => {
+                          return {
+                            answerID: null,
+                            status: GAME_STATUS.IN_PROGRESS,
+                          };
+                        });
                         setFlippingRow(null);
                         dispatch({
                           type: "RESET",
@@ -103,6 +110,7 @@ export default function Navbar() {
 
           {/* Dark/Light Toggle */}
           <ColorModeButton />
+          <UserInfo />
         </HStack>
       </Flex>
     </Box>

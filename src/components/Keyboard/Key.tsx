@@ -8,6 +8,7 @@ import { useContext, useState } from "react";
 import { BsBackspaceReverseFill } from "react-icons/bs";
 import { PiKeyReturnBold } from "react-icons/pi";
 import { motion, useAnimation } from "framer-motion";
+import { GAME_STATUS } from "@/constants";
 
 export default function Key({
   letter = "",
@@ -20,7 +21,7 @@ export default function Key({
   if (!context)
     throw new Error("WordleContext must be used within WordleProvider");
 
-  const { hasGameEnded } = context;
+  const { gameStatus } = context;
 
   const { colorMode } = useColorMode();
   const [statusColor] = useToken("colors", [`${status}.${colorMode}`]);
@@ -40,7 +41,7 @@ export default function Key({
   };
 
   const getOnClick = async () => {
-    if (hasGameEnded) return;
+    if (gameStatus.status !== GAME_STATUS.IN_PROGRESS) return;
     setClicked(letter);
 
     const handleKey = useLetterInput(context);

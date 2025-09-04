@@ -6,6 +6,7 @@ import { motion } from "motion/react";
 import { useLetterInput } from "@/hooks/useLetterInput/useLetterInput";
 import { toaster } from "@/components/ui/toaster";
 import { Flex, Spinner, Text } from "@chakra-ui/react";
+import { GAME_STATUS } from "@/constants";
 
 export default function GameBoard() {
   const context = useContext(WordleContext);
@@ -14,19 +15,17 @@ export default function GameBoard() {
 
   const {
     gameStore,
-    hasGameEnded,
-    id,
     error,
     setError,
     flippingRow,
     dimension,
     validateionLoading,
+    gameStatus,
   } = context;
   const currentRow = gameStore.findIndex((item) => !item.entered);
 
   useEffect(() => {
-    if (hasGameEnded) return;
-
+    if (gameStatus.status !== GAME_STATUS.IN_PROGRESS) return;
     const handleKey = useLetterInput(context);
 
     const handleTyping = async (e: KeyboardEvent) => {
@@ -40,7 +39,7 @@ export default function GameBoard() {
 
     window.addEventListener("keydown", handleTyping);
     return () => window.removeEventListener("keydown", handleTyping);
-  }, [hasGameEnded, id, gameStore, dimension]);
+  }, [gameStatus, gameStore, dimension]);
 
   if (error) {
     toaster.create({
@@ -53,6 +52,7 @@ export default function GameBoard() {
       ),
     });
   }
+
   return (
     <div className="flex flex-col gap-2" key={dimension}>
       {gameStore.map((row, rowIndex) => {
@@ -62,11 +62,11 @@ export default function GameBoard() {
           <div
             key={rowIndex}
             className="flex justify-center relative"
-            style={{ height: "62px" }} // matches card height
+            style={{ height: "62px" }}
           >
             {/* Row */}
             <motion.div
-              style={{ display: "flex", flexDirection: "row", gap: 12 }}
+              style={{ display: "flex", flexDirection: "row", gap: 8 }}
               transition={{ duration: 0.25 }}
               animate={
                 !!(error && rowIndex === currentRow)

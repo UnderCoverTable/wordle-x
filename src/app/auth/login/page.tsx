@@ -109,9 +109,9 @@ export default function Login() {
 
       <Dialog.Root
         lazyMount
+        placement={"center"}
         open={openResetPassowrd}
         onOpenChange={(e) => setOpenResetPassowrd(e.open)}
-        placement={"center"}
       >
         <Dialog.Trigger asChild></Dialog.Trigger>
         <Portal>

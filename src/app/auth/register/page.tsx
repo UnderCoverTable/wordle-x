@@ -28,7 +28,6 @@ export default function Login() {
         password,
       }),
     });
-    console.log("response: ", response);
   };
 
   return (
@@ -71,7 +70,9 @@ export default function Login() {
               />
             </Field.Root>
 
-            <Button variant="solid" onClick={handleSubmit}>Register</Button>
+            <Button variant="solid" onClick={handleSubmit}>
+              Register
+            </Button>
 
             <Box position="relative" w="full" my="6">
               <Separator className="w-[45%]" />

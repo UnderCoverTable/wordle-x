@@ -9,7 +9,8 @@ export type GameAction =
   | { type: "SET_LETTER"; payload: { letter: string } }
   | { type: "ENTER"; payload: { status: Array<string> } }
   | { type: "BACKSPACE" }
-  | { type: "RESET"; payload: { dimension: number } };
+  | { type: "RESET"; payload: { dimension: number } }
+  | { type: "SET_GAME_STATE"; payload: { gameState: GameRow[] } };
 
 export const gameReducer = (
   state: GameState,
@@ -78,6 +79,9 @@ export const gameReducer = (
 
     case "RESET":
       return initGameStore(action.payload.dimension);
+
+    case "SET_GAME_STATE":
+      return action.payload.gameState;
 
     default:
       return state;

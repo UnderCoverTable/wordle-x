@@ -1,21 +1,33 @@
+import {
+  CARD_STATUSES,
+  Cell,
+  GAME_STATUS,
+  GameRow,
+  GameState,
+} from "@/constants";
 import { validateAnswerApi } from "@/helpers";
 
 export const useLetterInput = (context: any) => {
   const {
     gameStore,
-    id,
     dispatch,
     setError,
     setFlippingRow,
-    hasGameEnded,
+    gameStatus,
     dimension,
     setValidateionLoading,
     validateionLoading,
+    setGameStatus,
   } = context;
   const currentRow = gameStore.findIndex((item: any) => !item.entered);
 
   const handleKey = async (key: string) => {
-    if (hasGameEnded || validateionLoading) return;
+    if (
+      gameStatus.status === GAME_STATUS.WON ||
+      gameStatus.status === GAME_STATUS.LOST ||
+      validateionLoading
+    )
+      return;
 
     switch (key) {
       case "Enter":
@@ -32,7 +44,10 @@ export const useLetterInput = (context: any) => {
         try {
           setValidateionLoading(true);
 
-          const response = await validateAnswerApi({ guess, id });
+          const response = await validateAnswerApi({
+            guess,
+            id: gameStatus.answerID,
+          });
           const validatedAnswer = await response?.json();
 
           if (validatedAnswer?.valid) {
@@ -41,6 +56,22 @@ export const useLetterInput = (context: any) => {
               payload: { status: validatedAnswer.status },
             });
             setFlippingRow(currentRow);
+
+            const isGuessCorrect = validatedAnswer.status.every(
+              (item: string) => item === CARD_STATUSES.CORRECT
+            );
+
+            const outOfTries = rowIndex === gameStore.length - 1;
+
+            if (isGuessCorrect) {
+              setGameStatus((prev: GameState) => {
+                return { ...prev, status: GAME_STATUS.WON };
+              });
+            } else if (outOfTries) {
+              setGameStatus((prev: GameState) => {
+                return { ...prev, status: GAME_STATUS.LOST };
+              });
+            }
           } else {
             setError(true);
           }
