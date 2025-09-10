@@ -17,15 +17,35 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
     status: "",
     answerID: null,
   });
+  const { user, authLoading } = useAuth();
 
   useEffect(() => {
     const fetchAnswer = async () => {
       try {
-        const response = await fetch(
-          `/api/answer?dimension=${dimension}&sessionId=${getSessionId()}`
-        );
-        const data = await response.json();
-        const answerID = data?.id?.id ?? data?.id;
+        const [stateResponse, answerResponse] = await Promise.all([
+          fetch(
+            `/api/state?dimension=${dimension}&sessionID=${
+              user?.id ?? getSessionId()
+            }`
+          ),
+          fetch(
+            `/api/answer?dimension=${dimension}&sessionID=${
+              user?.id ?? getSessionId()
+            }`
+          ),
+        ]);
+        const { data: state } = await stateResponse.json();
+        console.log('state: ', !!state);
+
+        const dataAnswer = await answerResponse.json();
+        const answerID = dataAnswer?.id?.id ?? dataAnswer?.id;
+
+        if (!!state) {
+          dispatch({
+            type: "SET_GAME_STATE",
+            payload: { gameState: state },
+          });
+        }
 
         setGameStatus({
           status: GAME_STATUS.IN_PROGRESS,
@@ -35,9 +55,10 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error fetching answer:", err);
       }
     };
-
-    fetchAnswer();
-  }, [dimension]);
+    if (!authLoading) {
+      fetchAnswer();
+    }
+  }, [dimension, authLoading]);
 
   useEffect(() => {
     const storeGameState = () => {
@@ -50,14 +71,19 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
           body: JSON.stringify({
             wordID: gameStatus.answerID,
             state: gameStore,
-            sessionID: getSessionId(),
+            sessionID: user?.id ?? getSessionId(),
+            gameStatus: gameStatus.status,
           }),
         });
       } catch (err) {
         console.error("Error fetching answer:", err);
       }
     };
-  }, [gameStore.filter((item) => item.entered).length]);
+
+    if (gameStatus.answerID && !validateionLoading) {
+      storeGameState();
+    }
+  }, [validateionLoading]);
 
   return (
     <WordleContext.Provider
@@ -74,6 +100,7 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
         setValidateionLoading,
         gameStatus,
         setGameStatus,
+        user,
       }}
     >
       {children}

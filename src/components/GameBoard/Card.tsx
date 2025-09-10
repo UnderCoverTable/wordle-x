@@ -64,7 +64,7 @@ export default function Card({
         transformStyle: "preserve-3d",
         border: "2px solid",
         borderColor:
-          currentColor && isValidColorHex(statusColor)
+          currentColor && isValidColorHex(statusColor) || !isFlipping && letter && isValidColorHex(statusColor) 
             ? "transparent"
             : letter
             ? "#515253"

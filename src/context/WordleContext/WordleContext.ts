@@ -17,4 +17,5 @@ export const WordleContext = createContext<{
   setValidateionLoading: (validateionLoading: boolean) => void;
   gameStatus: GameState;
   setGameStatus: React.Dispatch<React.SetStateAction<GameState>>;
+  user
 } | null>(null);

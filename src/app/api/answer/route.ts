@@ -4,9 +4,10 @@ import AnswerService from "@/app/api/answer/service";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const dimension = searchParams.get("dimension");
+  const sessionID = searchParams.get("sessionID")
 
   try {
-    const answer = await AnswerService.getAnswer(Number(dimension));
+    const answer = await AnswerService.getAnswer(Number(dimension), sessionID);
     if (answer.id) {
       return NextResponse.json({ id: answer.id }, { status: 200 });
     }
