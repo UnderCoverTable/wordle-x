@@ -8,12 +8,12 @@ class SaveStateService {
     sessionID: string,
     gameStatus: string
   ) => {
-    const { data, error } = await supabaseClient.from("games").upsert({
-      session_id: sessionID,
-      word_id: wordID,
-      state: state,
-      word_length: state[0]?.row?.length,
-      status: gameStatus,
+    const { data, error } = await supabaseClient.rpc("save_game", {
+      p_session_id: sessionID,
+      p_word_id: wordID,
+      p_word_length: state[0]?.row?.length,
+      p_state: state,
+      p_status: gameStatus,
     });
 
     if (error) throw error;
@@ -24,11 +24,11 @@ class SaveStateService {
     const { data, error } = await supabaseClient
       .from("games")
       .select("state")
-      .eq("status", 'in-progress')
+      .eq("status", "in-progress")
       .eq("session_id", sessionID)
-      .eq("word_length", dimension)
+      .eq("word_length", dimension);
 
-      if (error) throw error;
+    if (error) throw error;
     return data?.[0]?.state ?? null;
   };
 }
