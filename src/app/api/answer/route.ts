@@ -4,7 +4,11 @@ import AnswerService from "@/app/api/answer/service";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const dimension = searchParams.get("dimension");
-  const sessionID = searchParams.get("sessionID")
+  const sessionID = searchParams.get("sessionID");
+
+  if (!sessionID) {
+    return NextResponse.json({ error: "Missing sessionID" }, { status: 400 });
+  }
 
   try {
     const answer = await AnswerService.getAnswer(Number(dimension), sessionID);
