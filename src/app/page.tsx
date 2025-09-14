@@ -1,13 +1,5 @@
-// pages/index.tsx
-export async function getServerSideProps() {
-  return {
-    redirect: {
-      destination: "/game", // 👈 Change this
-      permanent: false,
-    },
-  };
-}
+import { redirect } from "next/navigation";
 
-export default function Index() {
-  return null;
+export default function Home() {
+  redirect("/game"); 
 }
