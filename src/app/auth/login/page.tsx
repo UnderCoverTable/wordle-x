@@ -18,11 +18,14 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/navigation";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [openResetPassowrd, setOpenResetPassowrd] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async () => {
     const response = await fetch("/api/signIn", {
@@ -32,6 +35,10 @@ export default function Login() {
         password,
       }),
     });
+    const responseJson = await response.json();
+    if (responseJson?.data?.data?.user?.id) {
+      router.push("/game");
+    }
   };
 
   return (
@@ -55,7 +62,7 @@ export default function Login() {
             </Field.Root>
             <Field.Root>
               <Field.Label>Password</Field.Label>
-              <Input
+              <PasswordInput
                 placeholder="Enter password"
                 value={password}
                 onChange={(event) => {

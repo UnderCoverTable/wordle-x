@@ -11,6 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
@@ -18,6 +19,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     const response = await fetch("/api/register", {
@@ -28,6 +30,11 @@ export default function Login() {
         password,
       }),
     });
+
+    const responseJson = await response.json();
+    if (responseJson?.data?.data?.user?.id) {
+      router.push("/game");
+    }
   };
 
   return (

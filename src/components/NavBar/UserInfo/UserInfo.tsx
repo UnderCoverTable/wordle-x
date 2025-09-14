@@ -2,18 +2,23 @@ import { useAuth } from "@/context/AuthContext/AuthProvider";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Menu, Portal, Text } from "@chakra-ui/react";
 import type { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 
 export default function UserInfo() {
+  const router = useRouter();
   const handleLogout = async () => {
     await fetch("/api/signOut", {
       method: "POST",
     });
+
+    router.push("/game")
+    window.location.reload();
   };
 
   const userData = useAuth();
   const userName = userData?.user
     ? userData?.user?.user_metadata?.display_name
-    : "John Doe";
+    : "Login";
 
   return (
     <Flex as="nav" px={4} py={2} align="center" justify="space-between">
@@ -30,7 +35,14 @@ export default function UserInfo() {
         <Portal>
           <Menu.Positioner>
             <Menu.Content color="black" shadow="lg" p={2} rounded="md">
-              <Menu.Item value="profile">Profile</Menu.Item>
+              <Menu.Item
+                value="profile"
+                onClick={() => {
+                  router.push("/profile");
+                }}
+              >
+                Profile
+              </Menu.Item>
 
               {/* Logout Button */}
               <Menu.Item value="logout">

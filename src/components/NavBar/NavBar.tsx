@@ -25,11 +25,17 @@ import { motion, useAnimation } from "framer-motion";
 import { HiViewGridAdd } from "react-icons/hi";
 import UserInfo from "@/components/NavBar/UserInfo/UserInfo";
 import { GAME_STATUS, GameState } from "@/constants";
+import { useAuth } from "@/context/AuthContext/AuthProvider";
+import { BiLogIn } from "react-icons/bi";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("gray.100", "gray.900");
   const textColor = useColorModeValue("black", "white");
+  const { user } = useAuth();
+  const router = useRouter();
 
   const context = useContext(WordleContext);
   if (!context)
@@ -43,9 +49,16 @@ export default function Navbar() {
     <Box bg={bg} px={4} shadow="md" className="h-16 flex-shrink-0">
       <Flex h={16} alignItems="center">
         {/* Logo / Brand */}
-        <Flex align={"center"} gap={2}>
+        <Flex align={"center"} gap={2} style={{ cursor: "pointer" }}>
           <HiViewGridAdd size={22} />
-          <Text fontSize="xl" fontWeight="bold" color={textColor}>
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            color={textColor}
+            onClick={() => {
+              router.push("/game");
+            }}
+          >
             Wordle X
           </Text>
         </Flex>
@@ -98,6 +111,7 @@ export default function Navbar() {
                           type: "RESET",
                           payload: { dimension: num },
                         });
+                        router.push("/game");
                       }}
                     >
                       {num}
@@ -107,10 +121,19 @@ export default function Navbar() {
               </Menu.Positioner>
             </Portal>
           </Menu.Root>
-
-          {/* Dark/Light Toggle */}
-          <ColorModeButton />
-          <UserInfo />
+          {/* Dark/Light Toggle
+          <ColorModeButton /> */}
+          {user ? (
+            <UserInfo />
+          ) : (
+            <Link
+              href="/auth/login"
+              className="p-2 rounded-full hover:bg-white/10 transition-colors"
+              aria-label="Login"
+            >
+              <BiLogIn size={22} />{" "}
+            </Link>
+          )}
         </HStack>
       </Flex>
     </Box>

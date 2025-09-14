@@ -35,7 +35,6 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
           ),
         ]);
         const { data: state } = await stateResponse.json();
-        console.log('state: ', !!state);
 
         const dataAnswer = await answerResponse.json();
         const answerID = dataAnswer?.id?.id ?? dataAnswer?.id;
