@@ -17,7 +17,7 @@ export const WordleProvider = ({ children }: { children: ReactNode }) => {
     status: "",
     answerID: null,
   });
-  const { user, authLoading } = useAuth();
+  const { user, authLoading } = useAuth() ?? { user: null, authLoading: false };
 
   useEffect(() => {
     const fetchAnswer = async () => {

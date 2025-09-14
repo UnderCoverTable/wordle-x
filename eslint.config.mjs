@@ -20,16 +20,7 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
     rules: {
-      // ✅ Turn off all rules that caused build errors
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
-      "react-hooks/rules-of-hooks": "off", // ⚠️ disables hook rule (use carefully)
-      "react/jsx-key": "off",
-      "react-hooks/exhaustive-deps": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-
-      // You already had this
-      "react/no-unescaped-entities": "off",
+      "react/no-unescaped-entities": "off", // ✅ disabled
     },
   },
 ];

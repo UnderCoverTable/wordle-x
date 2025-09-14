@@ -7,12 +7,26 @@ import { ChevronRightIcon, EmailIcon } from "@chakra-ui/icons";
 import { Progress, Stat, Text, useToken } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { LuGamepad2 } from "react-icons/lu";
-import { MdOutlineAttachEmail } from "react-icons/md";
 
-const formatCardData = (data = []) => {
+type BreakdownItem = {
+  word_length: number;
+  total_played: number;
+  total_won: number;
+  total_lost: number;
+};
+
+type CardDataInput = {
+  totals?: {
+    total_played: number;
+    total_won: number;
+    total_lost: number;
+  };
+  breakdown: BreakdownItem[];
+};
+
+const formatCardData = (data: CardDataInput) => {
   const formatted = DIMENSION_OPTIONS.map((length) => {
-    const match = data?.breakdown.find((b) => b.word_length === length);
+    const match = data.breakdown.find((b) => b.word_length === length);
     return {
       word_length: length,
       total_played: match?.total_played ?? 0,
@@ -21,11 +35,11 @@ const formatCardData = (data = []) => {
     };
   });
 
-  return { total: data?.totals, breakdown: formatted };
+  return { total: data.totals, breakdown: formatted };
 };
 
 export default function Profile() {
-  const { user, authLoading } = useAuth();
+  const { user, authLoading } = useAuth() ?? { user: null, authLoading: false };
   const { user_metadata } = user || {};
   const { colorMode } = useColorMode();
 
@@ -37,7 +51,7 @@ export default function Profile() {
 
   const { display_name: displayName, email } = user_metadata || {};
   const [hoveredStack, setHoveredStack] = useState<number | null>(null);
-  const [gameStats, setGameStats] = useState<{ breakdown?: any[] }>({});
+  const [gameStats, setGameStats] = useState<{ total?: { total_played: number; total_won: number; total_lost: number }; breakdown?: any[] }>({});
 
   useEffect(() => {
     const fetchStats = async () => {

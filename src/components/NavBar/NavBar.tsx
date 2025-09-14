@@ -34,7 +34,8 @@ export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const bg = useColorModeValue("gray.100", "gray.900");
   const textColor = useColorModeValue("black", "white");
-  const { user } = useAuth();
+  const auth = useAuth();
+  const user = auth?.user;
   const router = useRouter();
 
   const context = useContext(WordleContext);
