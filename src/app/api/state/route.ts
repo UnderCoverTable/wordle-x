@@ -20,9 +20,15 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const dimension = searchParams.get("dimension");
   const sessionID = searchParams.get("sessionID");
+  if (!sessionID) {
+    return NextResponse.json({ error: "Missing sessionID" }, { status: 400 });
+  }
 
   try {
-    const data = await SaveStateService.getGameState(sessionID, dimension);
+    const data = await SaveStateService.getGameState(
+      sessionID,
+      Number(dimension)
+    );
 
     return NextResponse.json({ data, success: true }, { status: 200 });
   } catch (error: any) {
