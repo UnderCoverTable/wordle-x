@@ -1,4 +1,4 @@
-# Wordle Clone (Custom Word Length) [Try it out!](wordle-x-eight.vercel.app)
+# Wordle Clone (Custom Word Length) [Try it out!](https://wordle-26tr2dfre-sameeds-projects-bd32c72e.vercel.app/game)
 
 A Wordle-inspired game built with **Next.js**, **TypeScript**, **Supabase**, and **Tailwind CSS** —  
 with a twist: you can **choose the word length** before playing! 🎯  
